@@ -1,3 +1,4 @@
+using DevSpot.Constants;
 using DevSpot.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,13 +45,8 @@ namespace DevSpot
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                //checking if admin is already added in database
-                if (!roleManager.RoleExistsAsync("Admin").Result)
-                {
-                    var result = roleManager.CreateAsync(new IdentityRole("Admin")).Result;
-                }
+                RoleSeeder.SeedRolesAsync(services).Wait();
             }
 
 
