@@ -17,7 +17,7 @@ namespace DevSpot
             {
                 options.UseSqlServer(connectionString);
             });
-            
+
             //adding a default user identity
             builder.Services.AddDefaultIdentity<IdentityUser>(options =>
             {
@@ -38,6 +38,21 @@ namespace DevSpot
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
+            //data seeding (Admin Role)
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                //checking if admin is already added in database
+                if (!roleManager.RoleExistsAsync("Admin").Result)
+                {
+                    var result = roleManager.CreateAsync(new IdentityRole("Admin")).Result;
+                }
+            }
+
 
             app.UseHttpsRedirection();
             app.UseRouting();
