@@ -1,3 +1,6 @@
+using DevSpot.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace DevSpot
 {
     public class Program
@@ -5,6 +8,14 @@ namespace DevSpot
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //db connection from appsettings.json
+            var connectionString = builder.Configuration.GetConnectionString("Database");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
