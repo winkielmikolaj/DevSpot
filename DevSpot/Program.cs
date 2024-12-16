@@ -46,7 +46,11 @@ namespace DevSpot
             {
                 var services = scope.ServiceProvider;
 
+                //seeding new roles
                 RoleSeeder.SeedRolesAsync(services).Wait();
+
+                //seeding new users with roles
+                UserSeeder.SeedUsersAsync(services).Wait();
             }
 
 
