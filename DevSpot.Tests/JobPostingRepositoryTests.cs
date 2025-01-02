@@ -1,4 +1,6 @@
 ﻿using DevSpot.Data;
+using DevSpot.Models;
+using DevSpot.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevSpot.Tests
 {
-    internal class JobPostingRepositoryTests
+    public class JobPostingRepositoryTests
     {
         private readonly DbContextOptions<ApplicationDbContext> _options;
 
@@ -23,6 +25,37 @@ namespace DevSpot.Tests
         private ApplicationDbContext CreateDbContext()
         {
             return new ApplicationDbContext(_options);
+        }
+
+        [Fact]
+        public async Task AddAsync_ShouldAddJobPosting()
+        {
+            //db context
+            var db = CreateDbContext();
+
+            //job posting repository
+            var repository = new JobPostingRepository(db);
+
+            //job posting
+            var jobPosting = new JobPosting
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                PostedDate = DateTime.Now,
+                Company = "Test Company",
+                Location = "Test Location",
+                UserId = "TestUserId"
+            };
+
+            //execute
+            await repository.AddAsync(jobPosting);
+
+            //check if we have result
+            var result = db.JobPostings.SingleOrDefault(x => x.Title == "Test Title");
+
+            //assert - output if our unit test is passing or not
+            Assert.NotNull(result);
+            Assert.Equal("Test Title", result.Title);
         }
     }
 }
