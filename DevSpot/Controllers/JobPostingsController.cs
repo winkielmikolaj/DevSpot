@@ -17,7 +17,13 @@ namespace DevSpot.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
+        {
+            var jobPosting = await _repository.GetAllAsync();
+            return View(jobPosting);
+        }
+
+        public IActionResult Create()
         {
             return View();
         }
