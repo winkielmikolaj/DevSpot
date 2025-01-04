@@ -1,11 +1,14 @@
-﻿using DevSpot.Models;
+﻿using DevSpot.Constants;
+using DevSpot.Models;
 using DevSpot.Repositories;
 using DevSpot.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSpot.Controllers
 {
+    [Authorize]
     public class JobPostingsController : Controller
     {
         private readonly IRepository<JobPosting> _repository;
@@ -17,19 +20,21 @@ namespace DevSpot.Controllers
             _userManager = userManager;
         }
 
-
+        [AllowAnonymous] //u can visit site as not logged user
         public async Task<IActionResult> Index()
         {
             var jobPosting = await _repository.GetAllAsync();
             return View(jobPosting);
         }
 
+        [Authorize(Roles = "Admin, Employer")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Employer")]
         public async Task<IActionResult> Create(JobPostingViewModel jobPostingVm)
         {
             if (ModelState.IsValid)
