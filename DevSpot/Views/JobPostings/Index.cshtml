@@ -8,7 +8,7 @@
 
     @foreach (var jobPosting in Model)
     {
-        <div class="list-group-item">
+        <div class="list-group-item" id="job-posting-@jobPosting.Id">
             <h3>@jobPosting.Title</h3>
             <p>@jobPosting.Description</p>
             <p><strong>Company:</strong>@jobPosting.Company</p>
@@ -41,13 +41,14 @@
                 //success -> visually remove the job posting
                 //error -> show an error message
 
+                //MAMY ERROR
                 $.ajax
                 ({
                     url: "@Url.Action("Delete", "JobPostings")/" + id,
                     type: "delete",
                     success: function(result)
                     {
-
+                        $("#job-posting-" + id).Remove();
                     },
                     error: function(err)
                     {
