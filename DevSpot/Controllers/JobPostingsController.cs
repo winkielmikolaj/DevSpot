@@ -72,14 +72,16 @@ namespace DevSpot.Controllers
 
             var userId = _userManager.GetUserId(User);
 
-            if(User.IsInRole(Roles.Admin) == false && jobPosting.UserId != userId)
+            if (User.IsInRole(Roles.Admin) == false && jobPosting.UserId != userId)
             {
                 return Forbid();
             }
 
             await _repository.DeleteAsync(id);
 
-            return View();
+            return Ok();
+
+
         }
     }
 }

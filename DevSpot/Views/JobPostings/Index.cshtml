@@ -44,11 +44,11 @@
                 //MAMY ERROR
                 $.ajax
                 ({
-                    url: "@Url.Action("Delete", "JobPostings")/" + id,
-                    type: "delete",
+                    url: "@Url.Action("Delete", "JobPostings")" + "/" + id,
+                    method: "Delete",
                     success: function(result)
                     {
-                        $("#job-posting-" + id).Remove();
+                        $("#job-posting-" + id).remove();
                     },
                     error: function(err)
                     {
