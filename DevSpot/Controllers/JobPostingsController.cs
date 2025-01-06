@@ -23,8 +23,20 @@ namespace DevSpot.Controllers
         [AllowAnonymous] //u can visit site as not logged user
         public async Task<IActionResult> Index()
         {
-            var jobPosting = await _repository.GetAllAsync();
-            return View(jobPosting);
+
+
+            if(User.IsInRole(Roles.Employer))
+            {
+                var allJobPosting = await _repository.GetAllAsync();
+                var userId = _userManager.GetUserId(User);
+                var filtereddJobPostings = allJobPosting.Where(jp => jp.UserId == userId);
+
+                return View(filtereddJobPostings);
+            }
+
+            var jobPostings = await _repository.GetAllAsync();
+
+            return View(jobPostings);
         }
 
         [Authorize(Roles = "Admin, Employer")]
