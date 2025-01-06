@@ -83,5 +83,30 @@ namespace DevSpot.Controllers
 
 
         }
+
+        
+        [Authorize(Roles = "Admin, Employer")]
+        public async Task<IActionResult> DeleteEasy(int id)
+        {
+            var jobPosting = await _repository.GetByIdAsync(id);
+
+            if (jobPosting == null)
+            {
+                return NotFound();
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            if (User.IsInRole(Roles.Admin) == false && jobPosting.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            await _repository.DeleteAsync(id);
+
+            return RedirectToAction("Index");
+
+
+        }
     }
 }
